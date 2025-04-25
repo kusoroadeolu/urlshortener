@@ -1,9 +1,11 @@
 package com.personal.urlshortener.controller;
 
+import com.personal.urlshortener.dto.ShortUrlDTO;
 import com.personal.urlshortener.dto.UrlDTO;
 import com.personal.urlshortener.models.Url;
 import com.personal.urlshortener.service.UrlService;
 import com.personal.urlshortener.utils.UrlUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,29 +22,29 @@ public class UrlController {
 
     //Redirects the short url to the original url  
     @GetMapping("/{shortCode}")
-    public void redirectToOriginalUrl(@PathVariable String shortCode, HttpServletResponse response)
+    public void redirectToOriginalUrl(@PathVariable String shortCode, HttpServletResponse response,
+                                                                                HttpServletRequest request)
                                                                                     throws IOException{
-      urlService.handleRedirect(shortCode, response);
+      urlService.handleRedirect(shortCode, response, request);
     }
 
     //Shorten your url
-    @PostMapping("/shorten")
+    @PostMapping("/api/shorten")
     //Note to format the shortcode into an actual url
-    public String shortenUrl(@RequestBody String originalUrl){
-        String shortCode = urlService.shorten(originalUrl);
-        return urlUtils.buildUrl(shortCode);
+    public ShortUrlDTO shortenUrl(@RequestBody String originalUrl){
+        return urlService.shorten(originalUrl);
     }
 
     //Gets the original url from the shortened one
-    @GetMapping("/original")
-    public UrlDTO getOriginalUrl(@RequestParam("shortenedUrl") String shortenedUrl){
-        return urlService.getOriginalUrl(shortenedUrl);
+    @GetMapping("/api/original")
+    public UrlDTO getOriginalUrl(@RequestParam("shortUrl") String shortUrl){
+        return urlService.getOriginalUrl(shortUrl);
     }
 
     /**
      * @param url The initial url
      * */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/api/delete")
     //Deletes a shortcode from an existing url
     public void deleteUrlShortCode(@RequestBody String url){
         urlService.updateUrlShortCode(url, "");
@@ -51,7 +53,7 @@ public class UrlController {
     /**
      * @param url The initial url
      * */
-    @PutMapping("/update")
+    @PutMapping("/api/update")
     public String updateUrlShortCode(@RequestBody String url){
         final String shortCode = urlUtils.generateShortCode();
         return urlService.updateUrlShortCode(url, shortCode);

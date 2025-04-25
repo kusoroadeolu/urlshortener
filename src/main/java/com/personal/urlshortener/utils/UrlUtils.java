@@ -20,7 +20,6 @@ public class UrlUtils {
 
     private final SecureRandom secureRandom;
     private final UrlProperties urlProperties;
-    private final UrlRepository urlRepository;
 
     public String generateShortCode(){
         StringBuilder stringBuilder = new StringBuilder();
@@ -42,14 +41,4 @@ public class UrlUtils {
         return path.replaceFirst("/", "");
     }
 
-
-    //Verifies is a short url exists in the db
-    public Url verifyShortUrl(String shortUrl){
-        String shortCode = extractShortCode(shortUrl);
-        Optional<Url> optionalUrl = urlRepository.findUrlByShortCode(shortCode);
-        optionalUrl.orElseThrow(() ->
-                new InvalidUrlException(String.format("Short url: %s not found!", shortUrl))
-        );
-        return optionalUrl.get();
-    }
 }

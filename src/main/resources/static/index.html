@@ -10,8 +10,42 @@
     <form>
         <label for="originalUrl">Enter your long URL: </label><br>
         <input type="text" id="originalUrl" name="originalUrl" placeholder="https://google.com">
-
         <button type="submit">Shorten</button>
     </form>
+
+    <div id = "result"></div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async function(e) {
+      e.preventDefault(); // Stop page reload
+
+      const urlInput = document.getElementById('urlInput');
+      const longUrl = urlInput.value;
+
+      try {
+        const response = await fetch('http://localhost:8080/shorten', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ newUrl: longUrl }) // Your backend accepts `newUrl`
+        });
+
+        if (!response.ok) {
+          throw new Error("Server returned an error.");
+        }
+
+        const shortCode = await response.text(); // Your backend returns the short code
+        const shortUrl = `http://localhost:8080/${shortCode}`;
+
+        document.getElementById('result').innerHTML = `
+          <p>Shortened URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a></p>
+        `;
+      } catch (error) {
+        document.getElementById('result').innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+      }
+    });
+    </script>
+
 </body>
 </html>

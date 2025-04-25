@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Getter
@@ -28,6 +29,10 @@ public class Click {
     @JoinColumn(name = "url_id", nullable = false)
     private Url url;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "ip_info_id")
+    private IpInfo ipInfo;
+
     @PrePersist
     public void setClickedAt(){
         this.clickedAt = LocalDateTime.now();
@@ -35,5 +40,15 @@ public class Click {
 
     public Click(Url url) {
         this.url = url;
+    }
+
+    public Click(Url url, IpInfo ipInfo) {
+        this.url = url;
+        this.ipInfo = ipInfo;
+    }
+
+    public String getFormattedDate(LocalDateTime localDateTime){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+        return localDateTime.format(dateTimeFormatter);
     }
 }

@@ -41,7 +41,6 @@ public class Url {
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -64,6 +63,7 @@ public class Url {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         return localDateTime.format(dateTimeFormatter);
     }
+
 
 
 
