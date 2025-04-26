@@ -35,6 +35,7 @@ public class IpInfoExtractor {
             return request.getRemoteAddr();
     }
 
+    //Get the referrer
     public String getReferer(HttpServletRequest request){
         String referer = request.getHeader("Referrer");
         if(referer != null && !referer.isEmpty()){

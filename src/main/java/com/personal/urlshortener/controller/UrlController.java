@@ -51,7 +51,7 @@ public class UrlController {
     }
 
     /**
-     * @param url The initial url
+     * @param url The initial url not the short url
      * */
     @PutMapping("/api/update")
     public String updateUrlShortCode(@RequestBody String url){
